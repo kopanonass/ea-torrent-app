@@ -1,0 +1,799 @@
+// =============================================
+// TORRENT EA Portal API Client
+// =============================================
+
+class TorrentEAPortalAPI {
+    constructor() {
+        this.baseURL = 'https://kopanonass.github.io/TORRENT-EA-portal1/';
+        this.paymentURL = 'https://api.paystack.co'; // PayStack API base
+        this.userStatus = {
+            registered: false,
+            paymentComplete: false,
+            registrationDate: null,
+            licenseKey: null,
+            subscriptionEnd: null
+        };
+        
+        // Simulated data from portal analysis
+        this.portalInfo = {
+            name: 'TORRENT EA',
+            description: 'Premium MQL Bot Management',
+            registrationFee: 2000.00,
+            currency: 'ZAR', // South African Rand
+            paymentProvider: 'PayStack',
+            features: [
+                'Premium MQL Bot Access',
+                'Bot Management Dashboard',
+                'Trading Signals',
+                'Strategy Library',
+                '24/7 Support'
+            ],
+            requirements: [
+                'MT4/MT5 Platform',
+                'Minimum Deposit: $100',
+                'Stable Internet Connection',
+                'VPS Recommended'
+            ]
+        };
+        
+        this.loadUserStatus();
+    }
+
+    // =============================================
+    // PORTAL INFORMATION METHODS
+    // =============================================
+
+    async fetchPortalInfo() {
+        try {
+            // Since the portal is static HTML, we'll simulate fetching data
+            // In a real scenario, you might parse the HTML or use an actual API
+            
+            console.log('Fetching TORRENT EA portal information...');
+            
+            // Simulate network delay
+            await this.simulateDelay(800);
+            
+            return {
+                success: true,
+                data: {
+                    ...this.portalInfo,
+                    lastUpdated: new Date().toISOString(),
+                    portalURL: this.baseURL,
+                    status: 'active'
+                }
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Failed to fetch portal info: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    async parsePortalContent() {
+        try {
+            // This would parse the actual HTML content
+            // For demonstration, returning simulated parsed data
+            
+            const portalContent = {
+                title: 'TORRENT EA',
+                headings: ['COMPLETE REGISTRATION'],
+                prices: ['R 2,000.00'],
+                buttons: ['PAY WITH PAYSTACK'],
+                descriptions: [
+                    'Complete your registration by paying the one-time fee of R 2,000',
+                    'Secure payment powered by PayStack'
+                ],
+                metadata: {
+                    hasPaymentForm: true,
+                    paymentProvider: 'PayStack',
+                    currency: 'ZAR',
+                    amount: 2000.00
+                }
+            };
+            
+            return {
+                success: true,
+                content: portalContent,
+                rawHTML: '<simulated-html-content>',
+                timestamp: new Date().toISOString()
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: 'Failed to parse portal content',
+                error: error
+            };
+        }
+    }
+
+    // =============================================
+    // REGISTRATION & PAYMENT METHODS
+    // =============================================
+
+    async initiateRegistration(userData) {
+        try {
+            const requiredFields = ['name', 'email', 'phone'];
+            const missingFields = requiredFields.filter(field => !userData[field]);
+            
+            if (missingFields.length > 0) {
+                return {
+                    success: false,
+                    message: `Missing required fields: ${missingFields.join(', ')}`
+                };
+            }
+
+            // Generate a registration reference
+            const registrationRef = `TORRENT-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            
+            // Simulate registration process
+            await this.simulateDelay(1200);
+            
+            const registration = {
+                reference: registrationRef,
+                user: {
+                    ...userData,
+                    id: `USER-${Math.random().toString(36).substr(2, 8).toUpperCase()}`
+                },
+                status: 'pending_payment',
+                amount: this.portalInfo.registrationFee,
+                currency: this.portalInfo.currency,
+                createdAt: new Date().toISOString(),
+                paymentURL: `${this.baseURL}#payment-${registrationRef}`,
+                instructions: 'Proceed to payment to complete registration'
+            };
+            
+            // Save to localStorage
+            this.saveRegistration(registration);
+            
+            return {
+                success: true,
+                message: 'Registration initiated successfully',
+                data: registration
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Registration failed: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    async simulatePayment(registrationRef, paymentData) {
+        try {
+            // Validate payment data
+            if (!paymentData.cardNumber || !paymentData.expiry || !paymentData.cvv) {
+                return {
+                    success: false,
+                    message: 'Invalid payment details'
+                };
+            }
+            
+            // Simulate payment processing with PayStack
+            console.log(`Processing payment for registration: ${registrationRef}`);
+            await this.simulateDelay(2000);
+            
+            // Generate payment response
+            const paymentResult = {
+                success: Math.random() > 0.1, // 90% success rate simulation
+                reference: `PAY-${Date.now()}`,
+                transactionId: `TXN-${Math.random().toString(36).substr(2, 12).toUpperCase()}`,
+                amount: this.portalInfo.registrationFee,
+                currency: this.portalInfo.currency,
+                timestamp: new Date().toISOString(),
+                provider: 'PayStack',
+                status: 'completed'
+            };
+            
+            if (paymentResult.success) {
+                // Update user status
+                this.userStatus.registered = true;
+                this.userStatus.paymentComplete = true;
+                this.userStatus.registrationDate = new Date().toISOString();
+                this.userStatus.licenseKey = this.generateLicenseKey();
+                this.userStatus.subscriptionEnd = this.calculateSubscriptionEnd();
+                
+                // Save updated status
+                this.saveUserStatus();
+                
+                return {
+                    success: true,
+                    message: 'Payment successful! Registration completed.',
+                    data: {
+                        ...paymentResult,
+                        userStatus: this.userStatus,
+                        accessGranted: true,
+                        welcomeMessage: 'Welcome to TORRENT EA Premium Service!'
+                    }
+                };
+            } else {
+                return {
+                    success: false,
+                    message: 'Payment declined. Please check your payment details.',
+                    data: {
+                        ...paymentResult,
+                        status: 'declined',
+                        suggestion: 'Try again or use a different payment method'
+                    }
+                };
+            }
+        } catch (error) {
+            return {
+                success: false,
+                message: `Payment processing error: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    async checkRegistrationStatus(registrationRef) {
+        try {
+            // Simulate checking registration status
+            await this.simulateDelay(800);
+            
+            const registration = this.getRegistration(registrationRef);
+            
+            if (!registration) {
+                return {
+                    success: false,
+                    message: 'Registration not found'
+                };
+            }
+            
+            // Simulate status progression
+            const status = this.userStatus.paymentComplete ? 'completed' : 'pending_payment';
+            const updatedRegistration = {
+                ...registration,
+                status: status,
+                lastChecked: new Date().toISOString(),
+                userStatus: this.userStatus
+            };
+            
+            return {
+                success: true,
+                data: updatedRegistration
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Failed to check status: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    // =============================================
+    // LICENSE & ACCESS METHODS
+    // =============================================
+
+    async validateLicense(licenseKey) {
+        try {
+            // Simulate license validation
+            await this.simulateDelay(600);
+            
+            if (licenseKey === this.userStatus.licenseKey && this.userStatus.paymentComplete) {
+                const isValid = new Date(this.userStatus.subscriptionEnd) > new Date();
+                
+                return {
+                    success: true,
+                    valid: isValid,
+                    data: {
+                        licenseKey: licenseKey,
+                        status: isValid ? 'active' : 'expired',
+                        expiresAt: this.userStatus.subscriptionEnd,
+                        daysRemaining: isValid ? 
+                            Math.ceil((new Date(this.userStatus.subscriptionEnd) - new Date()) / (1000 * 60 * 60 * 24)) : 0
+                    }
+                };
+            }
+            
+            return {
+                success: false,
+                valid: false,
+                message: 'Invalid or expired license key'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                valid: false,
+                message: `License validation error: ${error.message}`
+            };
+        }
+    }
+
+    async getAccessCredentials() {
+        try {
+            if (!this.userStatus.paymentComplete) {
+                return {
+                    success: false,
+                    message: 'Payment required for access'
+                };
+            }
+            
+            // Generate access credentials for the bot
+            const credentials = {
+                server: 'TORRENT-EA-SERVER',
+                login: `EA-${Math.random().toString(36).substr(2, 8).toUpperCase()}`,
+                password: this.generatePassword(),
+                mt4: true,
+                mt5: true,
+                broker: 'TORRENT-EA-Broker',
+                ports: [443, 8080],
+                endpoints: [
+                    'wss://torrent-ea-signals.com/ws',
+                    'https://api.torrent-ea.com/v1'
+                ],
+                apiKey: `API-${Math.random().toString(36).substr(2, 24).toUpperCase()}`,
+                validUntil: this.userStatus.subscriptionEnd
+            };
+            
+            return {
+                success: true,
+                data: credentials,
+                instructions: 'Use these credentials to connect your trading platform'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Failed to generate credentials: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    // =============================================
+    // BOT INTEGRATION METHODS
+    // =============================================
+
+    async connectToBot(credentials) {
+        try {
+            // Simulate bot connection
+            console.log('Connecting to TORRENT EA bot...');
+            await this.simulateDelay(1500);
+            
+            const connectionStatus = {
+                connected: true,
+                botVersion: 'TORRENT EA v2.5.1',
+                platform: 'MT5',
+                serverTime: new Date().toISOString(),
+                accountInfo: {
+                    balance: 10000.00,
+                    equity: 10050.25,
+                    margin: 250.75,
+                    freeMargin: 9749.25,
+                    leverage: 100
+                },
+                pairs: ['EURUSD', 'GBPUSD', 'USDJPY', 'XAUUSD'],
+                strategies: ['Grid', 'Scalping', 'Trend Following'],
+                status: 'running',
+                lastSignal: new Date().toISOString(),
+                performance: {
+                    today: '+1.25%',
+                    week: '+4.75%',
+                    month: '+12.30%',
+                    total: '+28.45%'
+                }
+            };
+            
+            return {
+                success: true,
+                message: 'Successfully connected to TORRENT EA bot',
+                data: connectionStatus
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Bot connection failed: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    async getBotStatus() {
+        try {
+            // Check if user has access
+            if (!this.userStatus.paymentComplete) {
+                return {
+                    success: false,
+                    message: 'Access denied. Complete registration first.'
+                };
+            }
+            
+            // Simulate getting bot status
+            await this.simulateDelay(900);
+            
+            const status = {
+                active: true,
+                lastUpdate: new Date().toISOString(),
+                trades: {
+                    open: 3,
+                    today: 5,
+                    week: 18,
+                    profit: 245.75
+                },
+                signals: {
+                    buy: 2,
+                    sell: 1,
+                    neutral: 4
+                },
+                marketConditions: 'Volatile - High Opportunity',
+                recommendations: [
+                    'EURUSD: BUY @ 1.0875',
+                    'XAUUSD: SELL @ 1982.50',
+                    'GBPUSD: HOLD'
+                ]
+            };
+            
+            return {
+                success: true,
+                data: status
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Failed to get bot status: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    async executeTrade(symbol, action, volume) {
+        try {
+            if (!this.userStatus.paymentComplete) {
+                return {
+                    success: false,
+                    message: 'Registration required for trading'
+                };
+            }
+            
+            // Simulate trade execution
+            console.log(`Executing trade: ${action} ${volume} ${symbol}`);
+            await this.simulateDelay(1200);
+            
+            const trade = {
+                ticket: `TRADE-${Date.now()}`,
+                symbol: symbol,
+                type: action,
+                volume: volume,
+                price: this.getCurrentPrice(symbol),
+                stopLoss: action === 'buy' ? 0.005 : 0.005,
+                takeProfit: action === 'buy' ? 0.015 : 0.015,
+                profit: 0,
+                status: 'open',
+                opened: new Date().toISOString(),
+                magicNumber: 123456
+            };
+            
+            return {
+                success: true,
+                message: 'Trade executed successfully',
+                data: trade
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Trade execution failed: ${error.message}`,
+                error: error
+            };
+        }
+    }
+
+    // =============================================
+    // UTILITY METHODS
+    // =============================================
+
+    generateLicenseKey() {
+        const segments = [];
+        for (let i = 0; i < 4; i++) {
+            segments.push(Math.random().toString(36).substr(2, 4).toUpperCase());
+        }
+        return `TORRENT-${segments.join('-')}`;
+    }
+
+    generatePassword() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+        let password = '';
+        for (let i = 0; i < 12; i++) {
+            password += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return password;
+    }
+
+    calculateSubscriptionEnd() {
+        const endDate = new Date();
+        endDate.setFullYear(endDate.getFullYear() + 1); // 1 year subscription
+        return endDate.toISOString();
+    }
+
+    getCurrentPrice(symbol) {
+        const prices = {
+            'EURUSD': 1.0875 + (Math.random() - 0.5) * 0.001,
+            'GBPUSD': 1.2700 + (Math.random() - 0.5) * 0.001,
+            'USDJPY': 147.50 + (Math.random() - 0.5) * 0.1,
+            'XAUUSD': 1980.00 + (Math.random() - 0.5) * 5
+        };
+        return prices[symbol] || 1.0000;
+    }
+
+    async simulateDelay(ms) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // =============================================
+    // STORAGE METHODS
+    // =============================================
+
+    saveRegistration(registration) {
+        try {
+            const registrations = JSON.parse(localStorage.getItem('torrentRegistrations') || '{}');
+            registrations[registration.reference] = registration;
+            localStorage.setItem('torrentRegistrations', JSON.stringify(registrations));
+            return true;
+        } catch (error) {
+            console.error('Failed to save registration:', error);
+            return false;
+        }
+    }
+
+    getRegistration(registrationRef) {
+        try {
+            const registrations = JSON.parse(localStorage.getItem('torrentRegistrations') || '{}');
+            return registrations[registrationRef];
+        } catch (error) {
+            console.error('Failed to get registration:', error);
+            return null;
+        }
+    }
+
+    saveUserStatus() {
+        try {
+            localStorage.setItem('torrentUserStatus', JSON.stringify(this.userStatus));
+            return true;
+        } catch (error) {
+            console.error('Failed to save user status:', error);
+            return false;
+        }
+    }
+
+    loadUserStatus() {
+        try {
+            const saved = localStorage.getItem('torrentUserStatus');
+            if (saved) {
+                this.userStatus = JSON.parse(saved);
+            }
+            return true;
+        } catch (error) {
+            console.error('Failed to load user status:', error);
+            return false;
+        }
+    }
+
+    // =============================================
+    // STATUS & INFO METHODS
+    // =============================================
+
+    getUserStatus() {
+        return {
+            ...this.userStatus,
+            hasAccess: this.userStatus.paymentComplete,
+            daysRemaining: this.userStatus.subscriptionEnd ? 
+                Math.ceil((new Date(this.userStatus.subscriptionEnd) - new Date()) / (1000 * 60 * 60 * 24)) : 0
+        };
+    }
+
+    getPortalDetails() {
+        return {
+            ...this.portalInfo,
+            url: this.baseURL,
+            timestamp: new Date().toISOString()
+        };
+    }
+
+    isRegistered() {
+        return this.userStatus.registered && this.userStatus.paymentComplete;
+    }
+
+    // =============================================
+    // WEBHOOK SIMULATION (For PayStack integration)
+    // =============================================
+
+    async simulatePayStackWebhook(paymentData) {
+        // This simulates PayStack sending a webhook to your backend
+        try {
+            console.log('Simulating PayStack webhook notification...');
+            
+            const webhookData = {
+                event: 'charge.success',
+                data: {
+                    reference: paymentData.reference,
+                    amount: paymentData.amount,
+                    currency: paymentData.currency,
+                    customer: {
+                        email: paymentData.customerEmail,
+                        name: paymentData.customerName
+                    },
+                    metadata: {
+                        registrationRef: paymentData.registrationRef
+                    },
+                    paidAt: new Date().toISOString()
+                }
+            };
+            
+            // Process the webhook
+            return await this.processPaymentWebhook(webhookData);
+        } catch (error) {
+            return {
+                success: false,
+                message: `Webhook processing failed: ${error.message}`
+            };
+        }
+    }
+
+    async processPaymentWebhook(webhookData) {
+        try {
+            // Validate webhook signature (in real implementation)
+            // Update registration status based on payment
+            
+            if (webhookData.event === 'charge.success') {
+                const registrationRef = webhookData.data.metadata.registrationRef;
+                
+                // Update user status
+                this.userStatus.registered = true;
+                this.userStatus.paymentComplete = true;
+                this.userStatus.registrationDate = new Date().toISOString();
+                this.userStatus.licenseKey = this.generateLicenseKey();
+                this.userStatus.subscriptionEnd = this.calculateSubscriptionEnd();
+                
+                this.saveUserStatus();
+                
+                return {
+                    success: true,
+                    message: 'Payment verified and registration completed',
+                    data: {
+                        registrationRef: registrationRef,
+                        userStatus: this.userStatus,
+                        licenseKey: this.userStatus.licenseKey
+                    }
+                };
+            }
+            
+            return {
+                success: false,
+                message: 'Unknown webhook event'
+            };
+        } catch (error) {
+            return {
+                success: false,
+                message: `Webhook processing error: ${error.message}`
+            };
+        }
+    }
+}
+
+// =============================================
+// GLOBAL INSTANCE & EXPORT
+// =============================================
+
+// Create global instance
+const torrentEAApi = new TorrentEAPortalAPI();
+
+// Export for browser use
+window.TorrentEAPortalAPI = TorrentEAPortalAPI;
+window.torrentEAApi = torrentEAApi;
+
+// Auto-initialize
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('TORRENT EA Portal API initialized');
+    console.log('Portal URL:', torrentEAApi.baseURL);
+    console.log('User Status:', torrentEAApi.getUserStatus());
+});
+
+// =============================================
+// EXAMPLE USAGE
+// =============================================
+
+/*
+// 1. Check portal information
+async function checkPortal() {
+    const result = await torrentEAApi.fetchPortalInfo();
+    if (result.success) {
+        console.log('Portal Info:', result.data);
+        document.getElementById('portalName').textContent = result.data.name;
+        document.getElementById('registrationFee').textContent = 
+            `R ${result.data.registrationFee.toFixed(2)}`;
+    }
+}
+
+// 2. Register a user
+async function registerUser() {
+    const userData = {
+        name: 'John Doe',
+        email: 'john@example.com',
+        phone: '+1234567890',
+        tradingExperience: 'intermediate'
+    };
+    
+    const result = await torrentEAApi.initiateRegistration(userData);
+    if (result.success) {
+        console.log('Registration initiated:', result.data.reference);
+        // Save reference for later use
+        localStorage.setItem('currentRegistration', result.data.reference);
+        
+        // Show payment button
+        document.getElementById('payButton').style.display = 'block';
+    }
+}
+
+// 3. Process payment
+async function processPayment() {
+    const registrationRef = localStorage.getItem('currentRegistration');
+    const paymentData = {
+        cardNumber: '4111111111111111',
+        expiry: '12/25',
+        cvv: '123'
+    };
+    
+    const result = await torrentEAApi.simulatePayment(registrationRef, paymentData);
+    if (result.success) {
+        console.log('Payment successful!', result.data);
+        alert('Registration completed! Your license key: ' + result.data.userStatus.licenseKey);
+        
+        // Update UI
+        document.getElementById('status').textContent = 'Active';
+        document.getElementById('status').className = 'status-active';
+    } else {
+        alert('Payment failed: ' + result.message);
+    }
+}
+
+// 4. Connect to bot after registration
+async function connectBot() {
+    if (!torrentEAApi.isRegistered()) {
+        alert('Please complete registration first');
+        return;
+    }
+    
+    const result = await torrentEAApi.connectToBot();
+    if (result.success) {
+        console.log('Bot connected:', result.data);
+        
+        // Display bot status
+        document.getElementById('botVersion').textContent = result.data.botVersion;
+        document.getElementById('accountBalance').textContent = 
+            '$' + result.data.accountInfo.balance.toFixed(2);
+    }
+}
+
+// 5. Get trading signals
+async function getSignals() {
+    const result = await torrentEAApi.getBotStatus();
+    if (result.success) {
+        console.log('Bot signals:', result.data.recommendations);
+        
+        // Display recommendations
+        const signalsList = document.getElementById('signalsList');
+        signalsList.innerHTML = '';
+        result.data.recommendations.forEach(signal => {
+            const li = document.createElement('li');
+            li.textContent = signal;
+            signalsList.appendChild(li);
+        });
+    }
+}
+
+// Initialize on page load
+window.addEventListener('load', () => {
+    checkPortal();
+    
+    // Check if user is already registered
+    if (torrentEAApi.isRegistered()) {
+        document.getElementById('registrationSection').style.display = 'none';
+        document.getElementById('tradingSection').style.display = 'block';
+        connectBot();
+    }
+});
+*/
+
+console.log('TORRENT EA Portal API loaded successfully!');
