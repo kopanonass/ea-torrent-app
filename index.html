@@ -14,6 +14,7 @@
       background-color: var(--background-color, #0a0a0a);
       transition: background-color 0.5s ease;
       color: #f0f0f0;
+      overflow: hidden;
     }
 
     .content {
@@ -23,6 +24,7 @@
       align-items: center;
       overflow-y: auto;
       padding-bottom: 20px;
+      position: relative;
     }
 
     .page {
@@ -32,6 +34,60 @@
       width: 100%;
       max-width: 800px;
       padding: 20px;
+    }
+
+    /* Movable Robot Icon */
+    .robot-floating-icon {
+      position: absolute;
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-color, #1abc9c), var(--primary-dark, #16a085));
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: move;
+      z-index: 1000;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.5), 0 0 0 3px rgba(var(--primary-rgb, 26, 188, 156), 0.3);
+      border: 3px solid white;
+      overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+    }
+
+    .robot-floating-icon:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6), 0 0 0 4px rgba(var(--primary-rgb, 26, 188, 156), 0.4);
+    }
+
+    .robot-floating-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .robot-floating-icon::after {
+      content: "DRAG ME";
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      color: var(--primary-color, #1abc9c);
+      background: rgba(0,0,0,0.8);
+      padding: 2px 8px;
+      border-radius: 10px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .robot-floating-icon:hover::after {
+      opacity: 1;
     }
 
     /* Home Page Styles */
@@ -271,7 +327,7 @@
       color: var(--primary-color, #1abc9c);
     }
 
-    /* Add New EA Container - Updated */
+    /* Add New EA Container */
     .add-new-container {
       display: flex;
       justify-content: center;
@@ -407,6 +463,373 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
+    /* Quotes Page Styles - NO CONTAINERS */
+    .quotes-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .quotes-tabs {
+      display: flex;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .quotes-tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      color: #aaa;
+    }
+
+    .quotes-tab:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .quotes-tab.active {
+      color: var(--primary-color, #1abc9c);
+      background-color: rgba(var(--primary-rgb, 26, 188, 156), 0.2);
+      border-bottom: 3px solid var(--primary-color, #1abc9c);
+    }
+
+    /* Symbols List - NO CONTAINER */
+    .symbols-list {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 0;
+    }
+
+    .symbol-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background-color: rgba(40, 40, 40, 0.8);
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .symbol-item:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary-color, #1abc9c);
+      background-color: rgba(var(--primary-rgb, 26, 188, 156), 0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .symbol-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 15px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      background: linear-gradient(135deg, var(--primary-color, #1abc9c), var(--primary-dark, #16a085));
+    }
+
+    .symbol-icon span {
+      font-weight: bold;
+      color: white;
+      font-size: 16px;
+    }
+
+    .symbol-info {
+      flex: 1;
+    }
+
+    .symbol-name {
+      font-size: 16px;
+      font-weight: bold;
+      color: #f0f0f0;
+      margin-bottom: 4px;
+    }
+
+    .symbol-description {
+      font-size: 12px;
+      color: #aaa;
+      font-weight: 500;
+    }
+
+    .symbol-price {
+      font-size: 16px;
+      font-weight: bold;
+      color: #f0f0f0;
+      margin-left: 10px;
+      min-width: 80px;
+      text-align: right;
+    }
+
+    .price-up {
+      color: #2ecc71;
+    }
+
+    .price-down {
+      color: #e74c3c;
+    }
+
+    .price-neutral {
+      color: #f0f0f0;
+    }
+
+    .symbol-status {
+      padding: 6px 12px;
+      border-radius: 15px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+
+    .status-allowed {
+      background-color: rgba(46, 204, 113, 0.3);
+      color: #2ecc71;
+    }
+
+    .status-blocked {
+      background-color: rgba(231, 76, 60, 0.3);
+      color: #e74c3c;
+    }
+
+    .quotes-header {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .quotes-header h2 {
+      margin: 0 0 10px 0;
+      color: #f0f0f0;
+    }
+
+    .quotes-header p {
+      margin: 0;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    /* Search Bar */
+    .search-container {
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(40, 40, 40, 0.8);
+      color: #f0f0f0;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .search-bar:focus {
+      outline: none;
+      border-color: var(--primary-color, #1abc9c);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 26, 188, 156), 0.2);
+    }
+
+    .search-bar::placeholder {
+      color: #666;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: #aaa;
+      width: 100%;
+      max-width: 500px;
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .empty-state p {
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .empty-state .icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    /* MT4/MT5 Account Pages - REMOVED CONTAINERS */
+    .account-tabs {
+      display: flex;
+      width: 100%;
+      max-width: 500px;
+      margin-bottom: 20px;
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 15px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .account-tab {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      color: #aaa;
+    }
+
+    .account-tab:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .account-tab.active {
+      color: var(--primary-color, #1abc9c);
+      background-color: rgba(var(--primary-rgb, 26, 188, 156), 0.2);
+      border-bottom: 3px solid var(--primary-color, #1abc9c);
+    }
+
+    /* MT5 & MT4 Icons */
+    .mt-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .mt-icon img {
+      width: 80px;
+      height: 80px;
+      border-radius: 20px;
+      object-fit: cover;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border: 3px solid rgba(var(--primary-rgb, 26, 188, 156), 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .mt-icon img:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      border-color: rgba(var(--primary-rgb, 26, 188, 156), 0.5);
+    }
+
+    /* Account Forms - No Containers */
+    .mt-account-form {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #f0f0f0;
+    }
+
+    .form-group input {
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background-color: rgba(40, 40, 40, 0.8);
+      color: #f0f0f0;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--primary-color, #1abc9c);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb, 26, 188, 156), 0.2);
+    }
+
+    .form-group input::placeholder {
+      color: #666;
+    }
+
+    .connect-btn {
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary-color, #1abc9c), var(--primary-dark, #16a085));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .connect-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(var(--primary-rgb, 26, 188, 156), 0.4);
+    }
+
+    .connect-btn:active {
+      transform: translateY(0);
+    }
+
+    .connect-btn svg {
+      width: 20px;
+      height: 20px;
+      stroke: white;
+      fill: none;
+      stroke-width: 2.5;
+    }
+
+    .connection-status {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+      display: none;
+    }
+
+    .connection-status.connected {
+      background-color: rgba(46, 204, 113, 0.2);
+      color: #2ecc71;
+      border: 2px solid rgba(46, 204, 113, 0.3);
+      display: block;
+    }
+
+    .connection-status.disconnected {
+      background-color: rgba(231, 76, 60, 0.2);
+      color: #e74c3c;
+      border: 2px solid rgba(231, 76, 60, 0.3);
+      display: block;
+    }
+
     /* Bottom navigation */
     .bottom-nav-container {
       display: flex;
@@ -469,20 +892,72 @@
       font-weight: 600;
     }
 
-    /* Page titles and text */
-    h2, .card-title {
+    /* Status message */
+    .status-message {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(30, 30, 30, 0.9);
+      color: var(--primary-color, #1abc9c);
+      padding: 12px 20px;
+      border-radius: 10px;
+      border-left: 4px solid var(--primary-color, #1abc9c);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 1001;
+      display: none;
+      font-weight: bold;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(var(--primary-rgb, 26, 188, 156), 0.3);
+      max-width: 300px;
+    }
+
+    /* Account Page Header */
+    .account-header {
+      text-align: center;
+      margin-bottom: 30px;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .account-header h2 {
+      margin: 0 0 10px 0;
       color: #f0f0f0;
     }
 
-    #accountPage, #settingsPage {
-      background: rgba(30, 30, 30, 0.8);
-      border-radius: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 2px 15px rgba(0,0,0,0.3);
+    .account-header p {
+      margin: 0;
+      color: #aaa;
+      font-size: 14px;
+    }
+
+    /* Form Header */
+    .form-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .form-header h3 {
+      color: var(--primary-color, #1abc9c);
+      margin: 0 0 5px 0;
+      font-size: 24px;
+    }
+
+    .form-header p {
+      color: #aaa;
+      margin: 0;
+      font-size: 14px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Movable Robot Icon -->
+  <div class="robot-floating-icon" id="floatingRobot">
+    <img src="https://i.pinimg.com/1200x/55/54/06/555406e39c6677653c608b415b68593e.jpg" alt="PIP X PLUS Robot">
+  </div>
+
+  <!-- Status Message -->
+  <div class="status-message" id="statusMessage"></div>
 
   <div class="content" id="pageContent">
     <div id="homePage" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
@@ -499,7 +974,7 @@
       
       <div class="icons-container">
         <div class="icon-row">
-          <div class="icon-item active" onclick="toggleStartStop(this)">
+          <div class="icon-item active" onclick="toggleStartStop(this)" id="startStopBtn">
             <div class="icon-circle">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M5 3l14 9-14 9V3z"/>
@@ -565,12 +1040,144 @@
       </div>
     </div>
 
-    <div id="accountPage" class="page">
-      <h2>Account Page</h2>
-      <div style="color: #aaa; margin-top: 20px;">Account information and settings will appear here.</div>
+    <!-- Quotes Page -->
+    <div id="quotesPage" class="page" style="display: none;">
+      <div class="quotes-header">
+        <h2>Market Quotes</h2>
+        <p>View and manage trading symbols for PIP X PLUS</p>
+      </div>
+      
+      <div class="quotes-tabs">
+        <div class="quotes-tab active" onclick="switchQuotesTab('allowed', this)">
+          Allowed Symbols
+        </div>
+        <div class="quotes-tab" onclick="switchQuotesTab('all', this)">
+          All Symbols
+        </div>
+      </div>
+      
+      <!-- Search Bar -->
+      <div class="search-container">
+        <input type="text" class="search-bar" id="symbolSearch" placeholder="Search symbols..." onkeyup="searchSymbols()">
+      </div>
+      
+      <!-- Allowed Symbols - EMPTY -->
+      <div id="allowedSymbols" class="symbols-list">
+        <div class="empty-state">
+          <div class="icon">📊</div>
+          <p><strong>No Allowed Symbols</strong></p>
+          <p>Switch to "All Symbols" tab to add symbols</p>
+          <p>Click on XAUUSD.m to allow it for trading</p>
+        </div>
+      </div>
+      
+      <!-- All Symbols - ONLY XAUUSD.m (Hidden by default) -->
+      <div id="allSymbols" class="symbols-list" style="display: none;">
+        <div class="symbol-item" onclick="toggleSymbol(this)">
+          <div class="symbol-icon">
+            <span>XAU</span>
+          </div>
+          <div class="symbol-info">
+            <div class="symbol-name">XAUUSD.m</div>
+            <div class="symbol-description">Gold vs US Dollar (Micro)</div>
+          </div>
+          <div class="symbol-price price-up">2187.45</div>
+          <div class="symbol-status status-blocked">BLOCKED</div>
+        </div>
+      </div>
     </div>
 
-    <div id="settingsPage" class="page">
+    <div id="accountPage" class="page" style="display: none;">
+      <div class="account-header">
+        <h2>Account Connection</h2>
+        <p>Connect your MetaTrader accounts to trade with PIP X PLUS</p>
+      </div>
+      
+      <div class="account-tabs">
+        <div class="account-tab active" onclick="switchAccountTab('mt5', this)">
+          MetaTrader 5
+        </div>
+        <div class="account-tab" onclick="switchAccountTab('mt4', this)">
+          MetaTrader 4
+        </div>
+      </div>
+      
+      <!-- MT5 Connection Form - NO CONTAINER -->
+      <div id="mt5Form" class="mt-account-form">
+        <div class="form-header">
+          <h3>MetaTrader 5</h3>
+          <!-- MT5 Icon Added Here -->
+          <div class="mt-icon">
+            <img src="https://i.pinimg.com/736x/8e/72/b5/8e72b5c7bf0e77893b754212541222e4.jpg" alt="MT5 Icon">
+          </div>
+          <p>Connect your MT5 trading account</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="mt5Login">Account Number</label>
+          <input type="text" id="mt5Login" placeholder="Enter MT5 Account Number">
+        </div>
+        
+        <div class="form-group">
+          <label for="mt5Password">Password</label>
+          <input type="password" id="mt5Password" placeholder="Enter MT5 Password">
+        </div>
+        
+        <div class="form-group">
+          <label for="mt5Server">Server</label>
+          <input type="text" id="mt5Server" placeholder="Enter MT5 Server (e.g., MetaQuotes-Demo)">
+        </div>
+        
+        <button class="connect-btn" onclick="connectMT5()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="M12 5l7 7-7 7"/>
+          </svg>
+          Connect MT5 Account
+        </button>
+        
+        <div id="mt5Status" class="connection-status"></div>
+      </div>
+      
+      <!-- MT4 Connection Form (Hidden by default) - NO CONTAINER -->
+      <div id="mt4Form" class="mt-account-form" style="display: none;">
+        <div class="form-header">
+          <h3>MetaTrader 4</h3>
+          <!-- MT4 Icon Added Here -->
+          <div class="mt-icon">
+            <img src="https://i.pinimg.com/736x/02/d1/49/02d14924ef18602fab2b3a1875a5adbc.jpg" alt="MT4 Icon">
+          </div>
+          <p>Connect your MT4 trading account</p>
+        </div>
+        
+        <div class="form-group">
+          <label for="mt4Login">Account Number</label>
+          <input type="text" id="mt4Login" placeholder="Enter MT4 Account Number">
+        </div>
+        
+        <div class="form-group">
+          <label for="mt4Password">Password</label>
+          <input type="password" id="mt4Password" placeholder="Enter MT4 Password">
+        </div>
+        
+        <div class="form-group">
+          <label for="mt4Server">Server</label>
+          <input type="text" id="mt4Server" placeholder="Enter MT4 Server (e.g., MetaQuotes-Demo)">
+        </div>
+        
+        <button class="connect-btn" onclick="connectMT4()">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"/>
+            <path d="M12 5l7 7-7 7"/>
+          </svg>
+          Connect MT4 Account
+        </button>
+        
+        <div id="mt4Status" class="connection-status"></div>
+      </div>
+    </div>
+
+    <div id="settingsPage" class="page" style="display: none;">
       <h2>Settings</h2>
       <div class="dropdown">
         <button class="dropdown-btn" onclick="toggleDropdown()">Choose Hot Color 
@@ -625,6 +1232,19 @@
     let currentPrimaryRGB = '26, 188, 156';
     let currentPrimaryDark = '#16a085';
     let currentBackgroundColor = '#0a0a0a';
+    
+    // System state
+    let isSystemRunning = false;
+    let isDragging = false;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    
+    // Account connection state
+    let isMT5Connected = false;
+    let isMT4Connected = false;
+    
+    // Quotes state - track allowed symbols
+    let allowedSymbols = [];
 
     // Color mapping for different colors and their darker variants
     const colorMap = {
@@ -687,6 +1307,16 @@
       element.classList.add('active');
     }
 
+    function openQuotes(element) {
+      // Highlight the Quotes icon
+      document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
+      element.classList.add('active');
+      
+      // Switch to Quotes page
+      switchPage('quotesPage', document.querySelector('.nav-item:nth-child(2)'));
+      showStatusMessage('Opening QUOTES panel...');
+    }
+
     function toggleDropdown() {
       const dropdown = document.getElementById('colorDropdown');
       dropdown.style.display = dropdown.style.display === 'flex' ? 'none' : 'flex';
@@ -702,9 +1332,28 @@
       // Apply the color theme to the entire app
       applyColorTheme();
       
+      // Update floating robot border if visible
+      const floatingRobot = document.getElementById('floatingRobot');
+      if (floatingRobot.style.display === 'flex') {
+        floatingRobot.style.boxShadow = `0 5px 20px rgba(0,0,0,0.5), 0 0 0 3px rgba(${currentPrimaryRGB}, 0.3)`;
+        floatingRobot.style.background = `linear-gradient(135deg, ${currentPrimaryColor}, ${currentPrimaryDark})`;
+      }
+      
+      // Update MT5 and MT4 icon border colors
+      const mtIcons = document.querySelectorAll('.mt-icon img');
+      mtIcons.forEach(icon => {
+        icon.style.borderColor = `rgba(${currentPrimaryRGB}, 0.3)`;
+      });
+      
+      // Update symbol icon backgrounds
+      const symbolIcons = document.querySelectorAll('.symbol-icon');
+      symbolIcons.forEach(icon => {
+        icon.style.background = `linear-gradient(135deg, ${currentPrimaryColor}, ${currentPrimaryDark})`;
+      });
+      
       // Show notification
       const colorName = getColorName(color);
-      alert(`App color changed to ${colorName}. Dark background updated!`);
+      showStatusMessage(`App color changed to ${colorName}`);
       
       // Close dropdown
       document.getElementById('colorDropdown').style.display = 'none';
@@ -723,7 +1372,7 @@
 
     function updateContainerBorders() {
       // Update container borders with subtle color hints
-      const containers = document.querySelectorAll('.icons-container, .robot-list-container, .add-new-container, .bottom-nav');
+      const containers = document.querySelectorAll('.icons-container, .robot-list-container, .add-new-container, .bottom-nav, .account-tabs, .quotes-tabs, .empty-state');
       
       containers.forEach(container => {
         container.style.borderColor = `rgba(${currentPrimaryRGB}, 0.2)`;
@@ -734,6 +1383,12 @@
       if (dropdownContent) {
         dropdownContent.style.borderColor = `rgba(${currentPrimaryRGB}, 0.3)`;
       }
+      
+      // Update symbol item borders
+      const symbolItems = document.querySelectorAll('.symbol-item');
+      symbolItems.forEach(item => {
+        item.style.borderColor = `rgba(${currentPrimaryRGB}, 0.2)`;
+      });
     }
 
     function getColorName(color) {
@@ -752,29 +1407,182 @@
       return colorNames[color] || color;
     }
 
-    // New functions for icon row
     function toggleStartStop(element) {
-      const isActive = element.classList.contains('active');
-      if (isActive) {
-        element.classList.remove('active');
-        alert('System STOPPED');
-      } else {
+      const floatingRobot = document.getElementById('floatingRobot');
+      
+      if (!isSystemRunning) {
+        // START the system
         element.classList.add('active');
-        alert('System STARTED');
+        isSystemRunning = true;
+        
+        // Show and position the floating robot icon
+        floatingRobot.style.display = 'flex';
+        
+        // Position at center of screen initially
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        const robotSize = 80;
+        
+        const posX = (screenWidth - robotSize) / 2;
+        const posY = (screenHeight - robotSize) / 2;
+        
+        floatingRobot.style.left = `${posX}px`;
+        floatingRobot.style.top = `${posY}px`;
+        
+        // Update label and show message
+        element.querySelector('.icon-label').textContent = 'STOP';
+        showStatusMessage('System STARTED - Robot icon is now movable');
+        
+        // Make robot movable
+        setupRobotDrag();
+      } else {
+        // STOP the system
+        element.classList.remove('active');
+        isSystemRunning = false;
+        
+        // Hide the floating robot icon
+        floatingRobot.style.display = 'none';
+        
+        // Update label and show message
+        element.querySelector('.icon-label').textContent = 'START';
+        showStatusMessage('System STOPPED');
       }
     }
 
-    function openQuotes(element) {
-      document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
-      element.classList.add('active');
-      alert('Opening QUOTES panel...');
+    function setupRobotDrag() {
+      const floatingRobot = document.getElementById('floatingRobot');
+      
+      // Mouse down event to start dragging
+      floatingRobot.addEventListener('mousedown', startDrag);
+      
+      // Touch events for mobile
+      floatingRobot.addEventListener('touchstart', startDragTouch);
+      
+      // Make sure we can't select text while dragging
+      floatingRobot.addEventListener('selectstart', function(e) {
+        e.preventDefault();
+        return false;
+      });
+    }
+
+    function startDrag(e) {
+      e.preventDefault();
+      isDragging = true;
+      const floatingRobot = document.getElementById('floatingRobot');
+      
+      // Calculate offset between mouse and robot position
+      const rect = floatingRobot.getBoundingClientRect();
+      dragOffsetX = e.clientX - rect.left;
+      dragOffsetY = e.clientY - rect.top;
+      
+      // Add event listeners for dragging and stopping
+      document.addEventListener('mousemove', dragRobot);
+      document.addEventListener('mouseup', stopDrag);
+      
+      // Change cursor to indicate dragging
+      floatingRobot.style.cursor = 'grabbing';
+    }
+
+    function startDragTouch(e) {
+      e.preventDefault();
+      if (e.touches.length !== 1) return;
+      
+      isDragging = true;
+      const floatingRobot = document.getElementById('floatingRobot');
+      const touch = e.touches[0];
+      
+      // Calculate offset between touch and robot position
+      const rect = floatingRobot.getBoundingClientRect();
+      dragOffsetX = touch.clientX - rect.left;
+      dragOffsetY = touch.clientY - rect.top;
+      
+      // Add event listeners for dragging and stopping
+      document.addEventListener('touchmove', dragRobotTouch);
+      document.addEventListener('touchend', stopDrag);
+      
+      // Change cursor to indicate dragging
+      floatingRobot.style.cursor = 'grabbing';
+    }
+
+    function dragRobot(e) {
+      if (!isDragging) return;
+      e.preventDefault();
+      
+      const floatingRobot = document.getElementById('floatingRobot');
+      const robotSize = 80;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      // Calculate new position
+      let newX = e.clientX - dragOffsetX;
+      let newY = e.clientY - dragOffsetY;
+      
+      // Keep robot within bounds
+      newX = Math.max(0, Math.min(newX, screenWidth - robotSize));
+      newY = Math.max(0, Math.min(newY, screenHeight - robotSize));
+      
+      // Apply new position
+      floatingRobot.style.left = `${newX}px`;
+      floatingRobot.style.top = `${newY}px`;
+    }
+
+    function dragRobotTouch(e) {
+      if (!isDragging || e.touches.length !== 1) return;
+      e.preventDefault();
+      
+      const floatingRobot = document.getElementById('floatingRobot');
+      const touch = e.touches[0];
+      const robotSize = 80;
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+      
+      // Calculate new position
+      let newX = touch.clientX - dragOffsetX;
+      let newY = touch.clientY - dragOffsetY;
+      
+      // Keep robot within bounds
+      newX = Math.max(0, Math.min(newX, screenWidth - robotSize));
+      newY = Math.max(0, Math.min(newY, screenHeight - robotSize));
+      
+      // Apply new position
+      floatingRobot.style.left = `${newX}px`;
+      floatingRobot.style.top = `${newY}px`;
+    }
+
+    function stopDrag() {
+      isDragging = false;
+      const floatingRobot = document.getElementById('floatingRobot');
+      
+      // Remove event listeners
+      document.removeEventListener('mousemove', dragRobot);
+      document.removeEventListener('mouseup', stopDrag);
+      document.removeEventListener('touchmove', dragRobotTouch);
+      document.removeEventListener('touchend', stopDrag);
+      
+      // Reset cursor
+      floatingRobot.style.cursor = 'move';
+      
+      // Show position feedback
+      const rect = floatingRobot.getBoundingClientRect();
+      showStatusMessage(`Robot positioned at X:${Math.round(rect.left)} Y:${Math.round(rect.top)}`);
+    }
+
+    function showStatusMessage(message) {
+      const statusMessage = document.getElementById('statusMessage');
+      statusMessage.textContent = message;
+      statusMessage.style.display = 'block';
+      
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        statusMessage.style.display = 'none';
+      }, 3000);
     }
 
     function removeItem(element) {
       document.querySelectorAll('.icon-item').forEach(item => item.classList.remove('active'));
       element.classList.add('active');
       if (confirm('Are you sure you want to remove selected items?')) {
-        alert('Selected items removed');
+        showStatusMessage('Selected items removed');
       }
     }
 
@@ -790,14 +1598,244 @@
       
       const robotName = element.querySelector('.robot-name').textContent;
       const robotVersion = element.querySelector('.robot-version').textContent;
-      alert(`Selected: ${robotName} ${robotVersion}`);
+      showStatusMessage(`Selected: ${robotName} ${robotVersion}`);
     }
 
     // Add New EA function
     function addNewEA() {
-      alert('Opening Add New Expert Advisor wizard...');
-      // You can implement the actual logic to add new EA here
-      // For example, show a modal or redirect to a new page
+      showStatusMessage('Opening Add New Expert Advisor wizard...');
+    }
+
+    // Quotes Tab Switching
+    function switchQuotesTab(tab, element) {
+      // Update tabs
+      document.querySelectorAll('.quotes-tab').forEach(tab => tab.classList.remove('active'));
+      element.classList.add('active');
+      
+      // Show/hide symbols lists
+      if (tab === 'allowed') {
+        document.getElementById('allowedSymbols').style.display = 'block';
+        document.getElementById('allSymbols').style.display = 'none';
+      } else {
+        document.getElementById('allowedSymbols').style.display = 'none';
+        document.getElementById('allSymbols').style.display = 'block';
+      }
+      
+      // Clear search when switching tabs
+      document.getElementById('symbolSearch').value = '';
+      searchSymbols();
+    }
+
+    // Toggle Symbol Status
+    function toggleSymbol(element) {
+      const statusElement = element.querySelector('.symbol-status');
+      const symbolName = element.querySelector('.symbol-name').textContent;
+      const symbolDescription = element.querySelector('.symbol-description').textContent;
+      const symbolPrice = element.querySelector('.symbol-price').textContent;
+      const priceClass = element.querySelector('.symbol-price').className;
+      
+      if (statusElement.textContent === 'ALLOWED') {
+        // Block the symbol
+        statusElement.textContent = 'BLOCKED';
+        statusElement.className = 'symbol-status status-blocked';
+        
+        // Remove from allowed symbols array
+        allowedSymbols = allowedSymbols.filter(symbol => symbol.name !== symbolName);
+        showStatusMessage(`${symbolName} has been BLOCKED`);
+      } else {
+        // Allow the symbol
+        statusElement.textContent = 'ALLOWED';
+        statusElement.className = 'symbol-status status-allowed';
+        
+        // Add to allowed symbols array
+        allowedSymbols.push({
+          name: symbolName,
+          description: symbolDescription,
+          price: symbolPrice,
+          priceClass: priceClass
+        });
+        showStatusMessage(`${symbolName} has been ALLOWED`);
+      }
+      
+      // Update the allowed symbols display
+      updateAllowedSymbolsDisplay();
+    }
+
+    // Update Allowed Symbols Display
+    function updateAllowedSymbolsDisplay() {
+      const allowedContainer = document.getElementById('allowedSymbols');
+      
+      if (allowedSymbols.length === 0) {
+        // Show empty state
+        allowedContainer.innerHTML = `
+          <div class="empty-state">
+            <div class="icon">📊</div>
+            <p><strong>No Allowed Symbols</strong></p>
+            <p>Switch to "All Symbols" tab to add symbols</p>
+            <p>Click on XAUUSD.m to allow it for trading</p>
+          </div>
+        `;
+      } else {
+        // Show allowed symbols
+        allowedContainer.innerHTML = allowedSymbols.map(symbol => `
+          <div class="symbol-item" onclick="toggleSymbol(this)">
+            <div class="symbol-icon">
+              <span>${symbol.name.substring(0, 3)}</span>
+            </div>
+            <div class="symbol-info">
+              <div class="symbol-name">${symbol.name}</div>
+              <div class="symbol-description">${symbol.description}</div>
+            </div>
+            <div class="symbol-price ${symbol.priceClass}">${symbol.price}</div>
+            <div class="symbol-status status-allowed">ALLOWED</div>
+          </div>
+        `).join('');
+      }
+      
+      // Update borders after changing content
+      updateContainerBorders();
+    }
+
+    // Search Symbols
+    function searchSymbols() {
+      const searchTerm = document.getElementById('symbolSearch').value.toLowerCase();
+      const activeTab = document.querySelector('.quotes-tab.active').textContent;
+      
+      if (activeTab.includes('All')) {
+        // Search in all symbols (only XAUUSD.m)
+        const symbolItem = document.querySelector('#allSymbols .symbol-item');
+        if (symbolItem) {
+          const symbolName = symbolItem.querySelector('.symbol-name').textContent.toLowerCase();
+          const symbolDesc = symbolItem.querySelector('.symbol-description').textContent.toLowerCase();
+          
+          if (symbolName.includes(searchTerm) || symbolDesc.includes(searchTerm)) {
+            symbolItem.style.display = 'flex';
+          } else {
+            symbolItem.style.display = 'none';
+          }
+        }
+      } else {
+        // Search in allowed symbols
+        const symbolItems = document.querySelectorAll('#allowedSymbols .symbol-item');
+        symbolItems.forEach(symbol => {
+          const symbolName = symbol.querySelector('.symbol-name').textContent.toLowerCase();
+          const symbolDesc = symbol.querySelector('.symbol-description').textContent.toLowerCase();
+          
+          if (symbolName.includes(searchTerm) || symbolDesc.includes(searchTerm)) {
+            symbol.style.display = 'flex';
+          } else {
+            symbol.style.display = 'none';
+          }
+        });
+      }
+    }
+
+    // Account Tab Switching
+    function switchAccountTab(tab, element) {
+      // Update tabs
+      document.querySelectorAll('.account-tab').forEach(tab => tab.classList.remove('active'));
+      element.classList.add('active');
+      
+      // Show/hide forms
+      if (tab === 'mt5') {
+        document.getElementById('mt5Form').style.display = 'flex';
+        document.getElementById('mt4Form').style.display = 'none';
+      } else {
+        document.getElementById('mt5Form').style.display = 'none';
+        document.getElementById('mt4Form').style.display = 'flex';
+      }
+    }
+
+    // MT5 Connection Function
+    function connectMT5() {
+      const login = document.getElementById('mt5Login').value;
+      const password = document.getElementById('mt5Password').value;
+      const server = document.getElementById('mt5Server').value;
+      const statusElement = document.getElementById('mt5Status');
+      
+      // Validate inputs
+      if (!login || !password || !server) {
+        statusElement.textContent = 'Please fill in all fields';
+        statusElement.className = 'connection-status disconnected';
+        showStatusMessage('MT5 Connection Failed: Please fill all fields');
+        return;
+      }
+      
+      // Simulate connection process
+      statusElement.textContent = 'Connecting to MT5...';
+      statusElement.className = 'connection-status';
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // For demo purposes, we'll simulate a successful connection
+        isMT5Connected = true;
+        statusElement.textContent = `Connected to MT5 Account #${login} on ${server}`;
+        statusElement.className = 'connection-status connected';
+        
+        showStatusMessage(`Successfully connected to MT5 Account #${login}`);
+        
+        // Store connection details (in a real app, you would use secure storage)
+        localStorage.setItem('mt5_login', login);
+        localStorage.setItem('mt5_server', server);
+        
+        // Update UI to show connection status
+        updateAccountConnectionStatus();
+      }, 1500);
+    }
+
+    // MT4 Connection Function
+    function connectMT4() {
+      const login = document.getElementById('mt4Login').value;
+      const password = document.getElementById('mt4Password').value;
+      const server = document.getElementById('mt4Server').value;
+      const statusElement = document.getElementById('mt4Status');
+      
+      // Validate inputs
+      if (!login || !password || !server) {
+        statusElement.textContent = 'Please fill in all fields';
+        statusElement.className = 'connection-status disconnected';
+        showStatusMessage('MT4 Connection Failed: Please fill all fields');
+        return;
+      }
+      
+      // Simulate connection process
+      statusElement.textContent = 'Connecting to MT4...';
+      statusElement.className = 'connection-status';
+      
+      // Simulate API call delay
+      setTimeout(() => {
+        // For demo purposes, we'll simulate a successful connection
+        isMT4Connected = true;
+        statusElement.textContent = `Connected to MT4 Account #${login} on ${server}`;
+        statusElement.className = 'connection-status connected';
+        
+        showStatusMessage(`Successfully connected to MT4 Account #${login}`);
+        
+        // Store connection details
+        localStorage.setItem('mt4_login', login);
+        localStorage.setItem('mt4_server', server);
+        
+        // Update UI to show connection status
+        updateAccountConnectionStatus();
+      }, 1500);
+    }
+
+    function updateAccountConnectionStatus() {
+      // In a real app, you would update UI elements to reflect connection status
+      console.log(`MT5 Connected: ${isMT5Connected}, MT4 Connected: ${isMT4Connected}`);
+    }
+
+    // Load saved credentials on page load
+    function loadSavedCredentials() {
+      const mt5Login = localStorage.getItem('mt5_login');
+      const mt5Server = localStorage.getItem('mt5_server');
+      const mt4Login = localStorage.getItem('mt4_login');
+      const mt4Server = localStorage.getItem('mt4_server');
+      
+      if (mt5Login) document.getElementById('mt5Login').value = mt5Login;
+      if (mt5Server) document.getElementById('mt5Server').value = mt5Server;
+      if (mt4Login) document.getElementById('mt4Login').value = mt4Login;
+      if (mt4Server) document.getElementById('mt4Server').value = mt4Server;
     }
 
     // Initially apply default color theme
@@ -805,6 +1843,52 @@
     
     // Initially show home page
     switchPage('homePage', document.querySelector('.nav-item.active'));
+    
+    // Load saved credentials
+    loadSavedCredentials();
+    
+    // Handle window resize to keep robot within bounds
+    window.addEventListener('resize', () => {
+      const floatingRobot = document.getElementById('floatingRobot');
+      if (floatingRobot.style.display === 'flex') {
+        const rect = floatingRobot.getBoundingClientRect();
+        const robotSize = 80;
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+        
+        // Adjust position if robot is outside new bounds
+        let newX = rect.left;
+        let newY = rect.top;
+        
+        newX = Math.max(0, Math.min(newX, screenWidth - robotSize));
+        newY = Math.max(0, Math.min(newY, screenHeight - robotSize));
+        
+        floatingRobot.style.left = `${newX}px`;
+        floatingRobot.style.top = `${newY}px`;
+      }
+    });
+
+    // Simulate price changes for XAUUSD.m
+    setInterval(() => {
+      const xauSymbol = document.querySelector('#allSymbols .symbol-item');
+      if (xauSymbol) {
+        const priceElement = xauSymbol.querySelector('.symbol-price');
+        const currentPrice = parseFloat(priceElement.textContent);
+        const change = (Math.random() - 0.5) * 0.1;
+        const newPrice = currentPrice + change;
+        
+        priceElement.textContent = newPrice.toFixed(2);
+        
+        // Update color based on change
+        if (change > 0) {
+          priceElement.className = 'symbol-price price-up';
+        } else if (change < 0) {
+          priceElement.className = 'symbol-price price-down';
+        } else {
+          priceElement.className = 'symbol-price price-neutral';
+        }
+      }
+    }, 3000);
   </script>
 
 </body>
